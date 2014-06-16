@@ -24,7 +24,10 @@
 			$menuLi
 				.removeClass('active')
 				.eq(iterator+1).addClass('active');
-		});
+			},{
+				offset: 120
+			}
+		);
 	}
 
 	for (var i = 0; i < selectorStrings.length; i++) {
