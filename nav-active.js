@@ -1,45 +1,49 @@
-// Cache selectors
-var lastId,
-    topMenu = jQuery("#menu-main-menu"),
-    topMenuHeight = topMenu.outerHeight()+15,
-    // All list items
-    menuItems = topMenu.find("a"),
-    // Anchors corresponding to menu items
-    scrollItems = menuItems.map(function(){
-      var item = jQuery(jQuery(this).attr("href"));
-      if (item.length) { return item; }
-    });
+(function AddActiveClassToMenu($){
 
-// Bind click handler to menu items
-// so we can get a fancy scroll animation
-menuItems.click(function(e){
-  var href = jQuery(this).attr("href"),
-      offsetTop = href === "#" ? 0 : jQuery(href).offset().top-topMenuHeight+1;
-  jQuery('html, body').stop().animate({ 
-      scrollTop: offsetTop
-  }, 300);
-  e.preventDefault();
-});
+	/* jQuery plugin to check if on Screen */
 
-// Bind to scroll
-jQuery(window).scroll(function(){
-   // Get container scroll position
-   var fromTop = jQuery(this).scrollTop()+topMenuHeight;
-   
-   // Get id of current scroll item
-   var cur = scrollItems.map(function(){
-     if (jQuery(this).offset().top < fromTop)
-       return this;
-   });
-   // Get the id of the current element
-   cur = cur[cur.length-1];
-   var id = cur && cur.length ? cur[0].id : "";
-   
-   if (lastId !== id) {
-       lastId = id;
-       // Set/remove active class
-       menuItems
-         .parent().removeClass("active")
-         .end().filter("[href=#"+id+"]").parent().addClass("active");
-   }                   
-});
+	$.fn.isOnScreen = function(){
+
+		var win = $(window);
+
+		var viewport = {
+			top : win.scrollTop(),
+			left : win.scrollLeft()
+		};
+		viewport.right = viewport.left + win.width();
+		viewport.bottom = viewport.top + win.height();
+
+		var bounds = this.offset();
+		bounds.right = bounds.left + this.outerWidth();
+		bounds.bottom = bounds.top + this.outerHeight();
+
+		return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
+	};
+
+	var $menu = $('#menu-main-menu');
+	var $menuLi = $menu.find('li');
+
+	$menu.find('a').click(function(){
+		$menuLi.removeClass('active');
+		$(this).parent().addClass('active');
+	});
+
+	var selectorStrings = ['.register','.eventschedule','.speakers-home','.visitors','#contact'];
+
+	for (var i = 0; i < selectorStrings.length; i++) {
+		$(selectorStrings[i]).addClass('pd-section');
+	}
+
+	$sections = $('.pd-section');
+
+	$(window).scroll(function(){
+		$sections.each(function(index){
+			if ($(this).isOnScreen()) {
+				$menuLi
+					.removeClass('active')
+					.eq(index+1).addClass('active');
+			}
+		});
+	});
+
+})(jQuery);
