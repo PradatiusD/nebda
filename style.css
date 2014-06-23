@@ -682,6 +682,16 @@ nav#site-navigation {
   }
 }
 
+@media screen and (max-width: 480px) {
+  body {
+    padding-top: 50px;
+  }
+  body.logged-in {
+    padding-top: 0px;
+  }
+}
+
+
 body.home div.home-jumbotron.jumbotron {
 	display: none;
 }
