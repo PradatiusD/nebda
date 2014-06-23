@@ -17,15 +17,13 @@
 		}
 	});
 
-	var selectorStrings = ['.register','.eventschedule','.speakers-home','.visitors','#contact'];
+	var selectorStrings = ['#page','#register','.eventschedule','#accomodations','.visitors','#contact'];
 
 	function activeWhenInView(iterator) {
 		$(selectorStrings[iterator]).waypoint(function(){
 			$menuLi
 				.removeClass('active')
-				.eq(iterator+1).addClass('active');
-			},{
-				offset: 120
+				.eq(iterator).addClass('active');
 			}
 		);
 	}
